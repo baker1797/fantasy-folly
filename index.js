@@ -32,21 +32,22 @@ app.get('/mongo/players/add', function( req, res ) {
         if(err) throw err;
 
         if ( req.query.id && req.query.name && req.query.apikey === 'hacker' ) {
-            if ( req.params.league ) {
-                newPlayer['league'] = req.params.league;
-            }
-
             var newPlayer = {
                 id : req.query.id,
                 name : req.query.name
             };
+
+            console.log(req.query.league)
+            if ( req.query.league !== undefined ) {
+                newPlayer['league'] = req.query.league;
+            }
 
             var players = db.collection('players');
 
             players.insert( newPlayer, function(err, result) {
                 if(err) throw err;
 
-                res.send(result);
+                res.send(req.query);
                 /*
                 players.find( {} ).toArray(function (err, docs) {
                     res.send( docs );
