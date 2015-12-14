@@ -1,0 +1,30 @@
+{
+  "name": "fantasy-folly",
+  "version": "1.0.0",
+  "description": "Sports science for fantasy jocks",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baker1797/fantasy-folly.git"
+  },
+  "keywords": [
+    "Fantasy",
+    "Sports",
+    "Data",
+    "Visual"
+  ],
+  "author": "Kyle Baker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baker1797/fantasy-folly/issues"
+  },
+  "homepage": "https://github.com/baker1797/fantasy-folly#readme",
+  "dependencies": {
+    "ejs": "2.3.3",
+    "express": "4.13.3",
+    "mongodb": "^2.1.1"
+  }
+}
