@@ -1,119 +1,51 @@
-var express = require('express');
-var app = express();
+// MODULES.
+var express    = require('express');
+var path       = require('path');
+//var handlebars = require('express-handlebars');
+//var fs         = require('fs');
+var mongodb    = require('mongodb');
 
-// Database
-var mongodb = require('mongodb');
+// APP.
+//var app = express();
+var app = express();//module.exports = express();
+var env = app.get('env');
 
 app.set('port', (process.env.PORT || 5000));
-
 app.use(express.static(__dirname + '/public'));
+app.use( '/scripts', express.static(__dirname + '/scripts') );
+
+//if not local enable handlebars cache
+if(env !== 'local' && env !== 'test'){
+    app.enable('view cache');
+}
 
 // views is directory for all template files
-app.set('views', __dirname + '/views');
+//app.engine('html', hbs.engine);
+app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'ejs');
-
+//app.set('view engine', 'html');
 
 // Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
 //var uri = process.env.PROD_MONGODB;
 var uri = "mongodb://infinity1797:7ul4f92nPQ@ds027335.mongolab.com:27335/fantasy_folly";
 
 
-//https://github.com/tmpvar/jsdom
-//$ = cheerio.load(
+// TODO - Setup handlebars / react / angular template.
 
 
-/**
- * Add a player to the db.
- * @param {string} name Player name.
- * @param {string} id   Player id.
- */
-app.get('/mongo/players/add', function( req, res ) {
-    mongodb.MongoClient.connect(uri, function(err, db) {
-        if(err) throw err;
-
-        if ( req.query.id && req.query.name && req.query.apikey === 'hacker' ) {
-            var newPlayer = {
-                id : req.query.id,
-                name : req.query.name
-            };
-
-            console.log(req.query.league)
-            if ( req.query.league !== undefined ) {
-                newPlayer['league'] = req.query.league;
-            }
-
-            var players = db.collection('players');
-
-            players.insert( newPlayer, function(err, result) {
-                if(err) throw err;
-
-                res.send(req.query);
-                /*
-                players.find( {} ).toArray(function (err, docs) {
-                    res.send( docs );
-                });
-                */
-            });
-        } else {
-            res.send('Not Authorized');
-        }
-    });
-});
-
-/**
- * List players
- * @param {string} league League filter.
- */
-app.get('/mongo/players(/:league)?', function( req, res ) {
-    console.log('players - league')
-    mongodb.MongoClient.connect(uri, function(err, db) {
-        if(err) throw err;
-
-        var league = req.params.league;
-        var players = db.collection('players');
-        var mq = {};
-
-        if ( league ) {
-            mq['league'] = league;
-        }
-
-        players.deleteMany( {id: null}, function(err, docs) {
-            console.log('-Deleted-');
-        });
-
-        players.find( mq ).toArray(function (err, docs) {
-            res.render('pages/mongo-test', { results: docs });
-        });
-    });
-});
-
-/**
- * Remove bad data
- */
-app.get('/mongo/clean', function( req, res ) {
-    console.log('players - league')
-    mongodb.MongoClient.connect(uri, function(err, db) {
-        if(err) throw err;
-
-        var players = db.collection('players');
-
-        players.deleteMany( {id: null}, function(err, docs) {
-            console.log('-Cleaned null id\'s-');
-            res.send('-Cleaned null id\'s-');
-        });
-    });
-});
+app.get( '/', function ( request, response ) {
+    require( path.join(__dirname, 'smb-perfect/index') );
+    response.render( 'pages/index' );
+} );
 
 
-app.get('/', function(request, response) {
-    response.render('pages/index');
-});
+//BQD_NZ8x75HZrlx2HAg6i9NPi1s21Cr9mtgKuSASc78TapbLK8p68JstuTgVU2oTgReBW57Tn1GjcXrrZC8l9N2aFwKio0
 
-app.get('/leagues/:league', function(request, response) {
-    console.log(request.params)
-    //response.send(request.params)
-    response.render('pages/league', {league: request.params.league });
-});
+
+
+
+
+
 
 
 app.listen(app.get('port'), function() {
@@ -121,3 +53,38 @@ app.listen(app.get('port'), function() {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+/**********************************************************************
+ *********************************************************************/
+
+/**
+ * TODO - Sections middleware
+ */
+/*
+ // ******* Add Sections *******
+
+ // Add middleware
+
+
+ require( sectionPath + "/controller" );
+ app.use( mongoRoutes() );
+
+ //utils.addSections(path.join(__dirname,"sections"));
+ var sectionConfig = JSON.parse(fs.readFileSync(sectionConfigPath, "utf8"));
+ for ( var section in sectionConfig ) {
+ try {
+ require( sectionPath + "/controller" );
+ } catch (e) {
+
+ }
+ }
+ */
